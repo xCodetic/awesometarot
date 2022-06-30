@@ -1,20 +1,98 @@
 /** @type {import('next').NextConfig} */
 const withPWA = require("next-pwa");
-const runtimeCaching = require("next-pwa/cache");
+const withManifest = require("next-manifest");
+const defaultCache = require("next-pwa/cache");
 
-module.exports = withPWA({
-  reactStrictMode: true,
-  images: {
-    loader: "akamai",
-    path: "",
-  },
-  basePath: "/awesometarot",
-  assetPrefix: "/awesometarot",
-  pwa: {
-    dest: "/public",
-    register: true,
-    skipWaiting: true,
-    runtimeCaching,
-    disable: process.env.NODE_ENV === "development",
-  },
-});
+const isProd = process.env.NODE_ENV === "production";
+const LINK_PREFIX = process.env.NEXT_PUBLIC_LINK_PREFIX || "";
+const FOLDER = LINK_PREFIX && LINK_PREFIX.substring(1);
+const THEME_COLOR = process.env.NEXT_PUBLIC_THEME_COLOR;
+const ICON_192_PATH = process.env.NEXT_PUBLIC_ICON_192_PATH;
+const ICON_512_PATH = process.env.NEXT_PUBLIC_ICON_512_PATH;
+const SHORT_NAME = process.env.SHORT_NAME || "";
+
+const encodeUriTransform = async (manifestEntries) => {
+  const manifest = manifestEntries.map((entry) => {
+    entry.url = encodeURI(entry.url);
+    return entry;
+  });
+  return { manifest, warnings: [] };
+};
+
+module.exports = () =>
+  withManifest(
+    withPWA({
+      target: "serverless",
+      poweredByHeader: false,
+      assetPrefix: LINK_PREFIX,
+      basePath: LINK_PREFIX,
+      images: {
+        loader: "akamai",
+        path: "",
+      },
+      pwa: {
+        disable: !isProd,
+        subdomainPrefix: LINK_PREFIX,
+        dest: "public",
+        manifestTransforms: [encodeUriTransform],
+        runtimeCaching: [
+          ...defaultCache,
+          {
+            urlPattern: /^https?.*/,
+            handler: "NetworkFirst",
+            options: {
+              cacheName: "offlineCache",
+              networkTimeoutSeconds: 15,
+              expiration: {
+                maxEntries: 150,
+                maxAgeSeconds: 30 * 24 * 60 * 60,
+              },
+              cacheableResponse: {
+                statuses: [0, 200],
+              },
+            },
+          },
+          {
+            urlPattern: ({ event }) => event.request.mode === "navigate",
+            handler: "CacheFirst",
+            options: {
+              cacheName: "offlineCache",
+              expiration: {
+                maxEntries: 150,
+                maxAgeSeconds: 30 * 24 * 60 * 60,
+              },
+              cacheableResponse: {
+                statuses: [0, 200],
+              },
+            },
+          },
+        ],
+        navigationPreload: true,
+      },
+
+      // manifest
+      manifest: {
+        output: "public",
+        short_name: SHORT_NAME || FOLDER,
+        name: FOLDER,
+        start_url: `${LINK_PREFIX}/`,
+        background_color: THEME_COLOR,
+        display: "standalone",
+        scope: `${LINK_PREFIX}/`,
+        dir: "ltr", // text direction: left to right
+        theme_color: THEME_COLOR,
+        icons: [
+          {
+            src: `${LINK_PREFIX}${ICON_192_PATH}`,
+            sizes: "192x192",
+            type: "image/png",
+          },
+          {
+            src: `${LINK_PREFIX}${ICON_512_PATH}`,
+            sizes: "512x512",
+            type: "image/png",
+          },
+        ],
+      },
+    })
+  );
