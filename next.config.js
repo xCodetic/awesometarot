@@ -5,6 +5,8 @@ const nextConfig = {
     loader: "akamai",
     path: "",
   },
+  basePath: "/awesometarot",
+  assetPrefix: "/awesometarot",
 };
 
 module.exports = nextConfig
