@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import { ManifestHead } from 'components/ManifestHead'
 import type { NextPage } from 'next'
+import { generateUrl } from 'utils'
 import styles from '../styles/Home.module.css'
 
 const Home: NextPage = () => {
@@ -57,7 +58,7 @@ const Home: NextPage = () => {
         >
           Powered by{' '}
           <span className={styles.logo}>
-            <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
+            <Image src={generateUrl("vercel.svg")} alt="Vercel Logo" width={72} height={16} />
           </span>
         </a>
       </footer>

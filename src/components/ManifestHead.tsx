@@ -1,5 +1,6 @@
 import NextHead from 'next/head';
 import React from 'react';
+import { generateUrl } from '../utils';
 import { join } from 'path';
 
 const LINK_PREFIX = process.env.NEXT_PUBLIC_LINK_PREFIX || '';
@@ -53,16 +54,16 @@ export const ManifestHead = (props: IManifestHeadProps) => {
       <meta name="keywords" key="keywords" content={keywords} />
       <meta httpEquiv="X-UA-Compatible" key="ua-compatible" content="ie=edge" />
       {!isAmp && hrefCanonical && (
-        <link rel="canonical" href={join(linkPrefix, hrefCanonical)} />
+        <link rel="canonical" href={generateUrl(hrefCanonical)} />
       )}
       {hrefManifest && (
-        <link rel="manifest" href={join(linkPrefix, hrefManifest)} />
+        <link rel="manifest" href={generateUrl(hrefManifest)} />
       )}
       {refresh && (
         <meta httpEquiv="refresh" key="refresh" content={`${refresh}`} />
       )}
       {favIconPath && (
-        <link rel="shortcut icon" href={join(linkPrefix, favIconPath)} />
+        <link rel="shortcut icon" href={generateUrl(favIconPath)} />
       )}
 
       {/* for safari */}
@@ -85,7 +86,7 @@ export const ManifestHead = (props: IManifestHeadProps) => {
         <link
           rel="apple-touch-icon"
           sizes={appleIconSize}
-          href={join(linkPrefix, appleIconPath)}
+          href={generateUrl(appleIconPath)}
         />
       )}
 
@@ -94,7 +95,7 @@ export const ManifestHead = (props: IManifestHeadProps) => {
         <meta
           name="msapplication-TitleImage"
           key="msapplication-TitleImage"
-          content={join(linkPrefix, appleIconPath)}
+          content={generateUrl(appleIconPath)}
         />
       )}
       {themeColor && (
