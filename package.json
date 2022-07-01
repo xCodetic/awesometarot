@@ -6,13 +6,12 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "export-dev": "SET NODE_ENV=production npm run build && next export && echo '' > out/.nojekyll",
-    "export": "NODE_ENV=production npm run build && next export && touch out/.nojekyll",
+    "export-dev": "npm run build && next export && echo '' > out/.nojekyll",
+    "export": "npm run build && next export && touch out/.nojekyll",
     "lint": "next lint"
   },
   "dependencies": {
     "next": "12.2.0",
-    "next-manifest": "^2.0.0",
     "next-pwa": "^5.5.4",
     "react": "18.2.0",
     "react-dom": "18.2.0"
