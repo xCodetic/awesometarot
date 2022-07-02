@@ -76,6 +76,7 @@ class MyDocument extends Document {
 					)}
 				</Head>
 				<body>
+					<div className="container" />
 					<Main />
 					<NextScript />
 				</body>
