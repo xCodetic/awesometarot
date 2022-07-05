@@ -1,14 +1,24 @@
-import '../styles/globals.css'
+import '../styles/globals.css';
+
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { useMemo, useState } from 'react';
 
 import type { AppProps } from 'next/app'
-import { ThemeProvider } from "next-themes";
+import {
+  PaletteMode
+} from '@mui/material';
 
-function MyApp({ Component, pageProps }: AppProps) {
+function AwesomeTarotApp({ Component, pageProps }: AppProps) {
+  const [mode, setMode] = useState<PaletteMode>("light");
+
+  const theme = useMemo(() => createTheme({ palette: { mode: mode } }), [mode]);
+
   return (
-    <ThemeProvider attribute="class" enableSystem={false} value={{ light: "light", dark: "dark" }}>
+    <ThemeProvider theme={theme}>
+      {/* <Switch onChange={() => setMode(mode === "light" ? "dark" : "light")} /> */}
       <Component {...pageProps} />
     </ThemeProvider>
   );
 }
 
-export default MyApp
+export default AwesomeTarotApp;
