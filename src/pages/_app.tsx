@@ -1,22 +1,29 @@
 import '../styles/globals.css';
 
+import { DefaultLayout, PageWithLayoutType } from 'components/layouts';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { useMemo, useState } from 'react';
 
-import type { AppProps } from 'next/app'
-import {
-  PaletteMode
-} from '@mui/material';
+import { PaletteMode } from '@mui/material';
 
-function AwesomeTarotApp({ Component, pageProps }: AppProps) {
+type AppLayoutProps = {
+  Component: PageWithLayoutType;
+  pageProps: any;
+}
+
+function AwesomeTarotApp({ Component, pageProps }: AppLayoutProps) {
+  // Get component layout
+  const Layout = Component.layout || DefaultLayout;
+  // Define theme mode
   const [mode, setMode] = useState<PaletteMode>("light");
-
   const theme = useMemo(() => createTheme({ palette: { mode: mode } }), [mode]);
 
   return (
     <ThemeProvider theme={theme}>
       {/* <Switch onChange={() => setMode(mode === "light" ? "dark" : "light")} /> */}
-      <Component {...pageProps} />
+      <Layout>
+        <Component {...pageProps} />
+      </Layout>
     </ThemeProvider>
   );
 }

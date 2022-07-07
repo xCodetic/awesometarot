@@ -4,7 +4,7 @@ import { styled } from '@mui/material';
 
 const HOME = styled("div")(() => ({
   padding: "0 2rem",
-  height: "100vh",
+  // height: "100vh",
   '& main': {
     minHeight: "100vh",
     padding: "4rem 0",
